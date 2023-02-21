@@ -17,6 +17,7 @@ def mark_info(names, course, mark, mark_dic):
 
 
 def mark_input(courses, students, marks):
+    course_id = input('ID of the course: ')
     while course_id not in Courses:
         print('There is no such course ID. Please try again!')
         course_id = input('ID of the course: ')
@@ -52,7 +53,7 @@ def input_course():
     global Courses
     while True:
         try:
-            n = int(input('Enter number of Students: '))
+            n = int(input('Enter number of Courses: '))
         except ValueError:
             print('Invalid input, Try again!')
             continue
