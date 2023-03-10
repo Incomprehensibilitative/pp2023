@@ -59,8 +59,6 @@ class Management:
             course.set_course(ids, name)
             self.__course_list.append(course)
 
-
-
     def new_mark(self):
         course_id = input('Enter the course ID: ')
         student_id = input('Enter the student ID: ')
@@ -74,11 +72,8 @@ class Management:
         mark = take_a_number()
         for i in self.__course_list:
             if i.get_id() == course_id:
-                temp = dict()
                 temp = [student_id, mark]
                 i.set_mark(temp)
-
-
 
 
 class Students:
@@ -143,6 +138,7 @@ def validate_id(id, list):
             return True
     return False
 
+
 def action(c, system):
     if c == 0:
         exit()
@@ -181,7 +177,6 @@ def main():
         else:
             action(b, system)
             print()
-
 
 
 if __name__ == "__main__":
