@@ -69,6 +69,12 @@ def list_student():
     global Students
     print('Student list: ')
     for key, value in Students.items():
+        print(f""""
+            Student ID: {key}
+            -------------------
+            Student Name: {value[0]}
+            Student DoB: {value[1]}
+            """)
         time.sleep(2)
 
 
