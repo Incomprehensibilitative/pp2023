@@ -52,8 +52,8 @@ class Management:
                     print()
 
     def new_student(self):
-        print('Number of student')
-        n = take_a_number()
+        # print('Number of student')
+        n = take_a_number('Number of student: ')
         self.__number_of_student += n
         for i in range(n):
             ids = input('Student ID: ')
@@ -64,13 +64,13 @@ class Management:
             self.__student_list.append(student)
 
     def new_course(self):
-        print('Number of course')
-        n = take_a_number()
+        # print('Number of course')
+        n = take_a_number('Number of course: ')
         self.__number_of_course += n
         for i in range(n):
             ids = input('Course ID: ')
             name = input('Course name: ')
-            credit = int(input('Course credit: '))
+            credit = take_a_number('Course credit: ')
             self.__number_of_credit += credit
             course = Courses()
             course.set_course(ids, name, credit)
@@ -86,7 +86,7 @@ class Management:
             print('Wrong student ID')
             student_id = input('Enter the student ID: ')
         print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
-        mark = take_a_number()
+        mark = take_a_number('Enter student mark: ')
         temp_credit = 0
         for course in self.__course_list:
             if course.get_id() == course_id:
@@ -187,10 +187,10 @@ class Courses:
 
 
 # General functions
-def take_a_number():
+def take_a_number(txt):
     while True:
         try:
-            n = int(input('Enter a number: '))
+            n = int(input(txt))
         except ValueError:
             print('Invalid input, Try again!')
             continue
