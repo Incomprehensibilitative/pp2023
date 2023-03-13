@@ -52,11 +52,10 @@ class Management:
                     print()
 
     def new_student(self):
-        # print('Number of student')
         n = take_a_number('Number of student: ')
         self.__number_of_student += n
         for i in range(n):
-            ids = input('Student ID: ')
+            ids = valid_input_id('Student ID: ')
             name = input('Student name: ')
             dob = input('Student DoB: ')
             student = Students()
@@ -64,11 +63,10 @@ class Management:
             self.__student_list.append(student)
 
     def new_course(self):
-        # print('Number of course')
         n = take_a_number('Number of course: ')
         self.__number_of_course += n
         for i in range(n):
-            ids = input('Course ID: ')
+            ids = valid_input_id('Course ID: ')
             name = input('Course name: ')
             credit = take_a_number('Course credit: ')
             self.__number_of_credit += credit
@@ -196,6 +194,15 @@ def take_a_number(txt):
             continue
         else:
             return n
+
+
+def valid_input_id(txt):
+    while True:
+        id = input(txt)
+        if id.strip() != '':
+            return id
+        else:
+            print('Invalid input, Try again!')
 
 
 def validate_id(id, list):
