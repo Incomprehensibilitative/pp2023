@@ -19,12 +19,15 @@ class Management:
 
     def list_students(self):
         gpa_list = np.array([[0]])
-        for student in self.__student_list:
-            gpa_list = np.concatenate((gpa_list, [[student.get_gpa()]]), axis=0)
-        gpa_list = np.sort(gpa_list, axis=None)
-        gpa_list = gpa_list[::-1]
-
-        for g in range(len(gpa_list)):
+        try:
+            for student in self.__student_list:
+                gpa_list = np.concatenate((gpa_list, [[student.get_gpa()]]), axis=0)
+            gpa_list = np.sort(gpa_list, axis=None)
+            gpa_list = gpa_list[::-1]
+        except TypeError:
+            pass
+        print("Student list:")
+        for g in range(len(gpa_list)-1):
             for s in self.__student_list:
                 if s.get_gpa() == gpa_list[g]:
                     print()
@@ -34,6 +37,7 @@ class Management:
                           f'Student GPA: {s.get_gpa()}\n')
 
     def list_courses(self):
+        print("Course list:")
         for c in self.__course_list:
             print()
             print(f'Course ID: {c.get_id()}\n'
@@ -81,6 +85,11 @@ class Management:
         print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
         mark = valid_mark()
         temp_credit = 0
+        for student in self.__student_list:
+            if student.get_id() == student_id:
+                if student.get_mark() is not None:
+                    print("The mark is already filled")
+                    return 0
         for course in self.__course_list:
             if course.get_id() == course_id:
                 temp_credit = course.get_credit()
@@ -112,12 +121,15 @@ class Management:
 
     def calculate_gpa(self):
         # sum(marks * credits) / total_credits
-        for student in self.__student_list:
-            student_marks = np.array(student.get_mark())
-            product_of_mark_credit = np.prod(student_marks, axis=1)
-            divisor = np.sum(product_of_mark_credit)
-            gpa = divisor/self.__number_of_credit
-            student.set_gpa(math.floor(gpa))
+        try:
+            for student in self.__student_list:
+                student_marks = np.array(student.get_mark())
+                product_of_mark_credit = np.prod(student_marks, axis=1)
+                divisor = np.sum(product_of_mark_credit)
+                gpa = divisor/self.__number_of_credit
+                student.set_gpa(math.floor(gpa))
+        except np.AxisError:
+            print('No mark was added -> cannot calculate GPA -> cannot list student in descending GPA')
 
 
 class Students:
@@ -126,7 +138,7 @@ class Students:
         self.__name = ''
         self.__dob = ''
         self.__marks = None
-        self.__gpa = 0
+        self.__gpa = None
 
     def set_student(self, id, name, dob):
         self.__id = id
