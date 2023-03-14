@@ -17,7 +17,17 @@ class Management:
     def get_student_list(self):
         return self.__student_list
 
-    def list_students(self):
+    def list_students_unsorted(self):
+        print("===========================================")
+        for s in self.__student_list:
+            print(f'Student ID: {s.get_id()}\n'
+                  f'Student name: {s.get_name()}\n'
+                  f'Student DoB: {s.get_dob()}\n'
+                  f'Student GPA: {s.get_gpa()}\n')
+            print("===========================================")
+            print()
+
+    def list_students_sorted(self):
         gpa_list = np.array([[0]])
         try:
             for student in self.__student_list:
@@ -25,32 +35,43 @@ class Management:
             gpa_list = np.sort(gpa_list, axis=None)
             gpa_list = gpa_list[::-1]
         except TypeError:
-            pass
+            self.list_students_unsorted()
+            return 0
+        print("===========================================")
         print("Student list:")
+        print("===========================================")
         for g in range(len(gpa_list)-1):
             for s in self.__student_list:
                 if s.get_gpa() == gpa_list[g]:
-                    print()
                     print(f'Student ID: {s.get_id()}\n'
                           f'Student name: {s.get_name()}\n'
                           f'Student DoB: {s.get_dob()}\n'
                           f'Student GPA: {s.get_gpa()}\n')
+                    print("===========================================")
+                    print()
 
     def list_courses(self):
+        print("===========================================")
         print("Course list:")
+        print("===========================================")
         for c in self.__course_list:
-            print()
             print(f'Course ID: {c.get_id()}\n'
                   f'Course name: {c.get_name()}\n'
                   f'Course credit: {c.get_credit()}')
+            print("===========================================")
+            print()
+
 
     def list_marks(self):
         course_id = self.get_course_id()
+        print("===========================================")
         print('Students marks for the course')
+        print("===========================================")
         for i in self.__course_list:
             if i.get_id() == course_id:
                 for s, m in i.get_mark():
                     print(f""" Student ID: {s} \n Student mark: {m}""")
+                    print("===========================================")
                     print()
 
     def new_student(self):
@@ -63,9 +84,10 @@ class Management:
             student = Students()
             student.set_student(ids, name, dob)
             if validate_id(student.get_id(), self.__student_list):
-                print('The Student ID already existed')
+                print(f'Student ID: {student.get_id()} - already existed')
                 break
             self.__student_list.append(student)
+        print("===========================================")
 
     def new_course(self):
         n = take_a_number('Number of course: ')
@@ -77,18 +99,25 @@ class Management:
             self.__number_of_credit += credit
             course = Courses()
             course.set_course(ids, name, credit)
+            if validate_id(course.get_id(), self.__course_list):
+                print(f'The Course ID: {course.get_id()} - already existed')
+                break
             self.__course_list.append(course)
+        print("===========================================")
 
     def new_mark(self):
         course_id = self.get_course_id()
         student_id = self.get_student_id()
+        print("===========================================")
         print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
+        print("===========================================")
         mark = valid_mark()
         temp_credit = 0
         for student in self.__student_list:
             if student.get_id() == student_id:
                 if student.get_mark() is not None:
                     print("The mark is already filled")
+                    print("===========================================")
                     return 0
         for course in self.__course_list:
             if course.get_id() == course_id:
@@ -115,9 +144,11 @@ class Management:
         return course_id
 
     def get_student_gpa(self, student_id):
+        print("===========================================")
         for student in self.__student_list:
             if student.get_id() == student_id:
                 print(f"Student ID: {student_id} - GPA: {student.get_gpa()}")
+                print("===========================================")
 
     def calculate_gpa(self):
         # sum(marks * credits) / total_credits
@@ -129,7 +160,9 @@ class Management:
                 gpa = divisor/self.__number_of_credit
                 student.set_gpa(math.floor(gpa))
         except np.AxisError:
-            print('No mark was added -> cannot calculate GPA -> cannot list student in descending GPA')
+            print("===========================================")
+            print('All student mark was not added -> cannot calculate GPA -> cannot list student in descending GPA')
+            print("===========================================")
 
 
 class Students:
@@ -201,6 +234,7 @@ class Courses:
 # General static functions
 def take_a_number(txt):
     while True:
+        print("===========================================")
         try:
             n = int(input(txt))
         except ValueError:
@@ -212,6 +246,7 @@ def take_a_number(txt):
 
 def valid_input_id(txt):
     while True:
+        print("===========================================")
         id = input(txt)
         if id.strip() != '':
             return id
@@ -221,6 +256,7 @@ def valid_input_id(txt):
 
 def valid_mark():
     while True:
+        print("===========================================")
         mark = take_a_number('Enter student mark: ')
         if mark < 0 or mark > 20:
             print('Invalid input, Try again!')
@@ -246,7 +282,7 @@ def action(c, system):
         system.new_mark()
     elif c == 4:
         system.calculate_gpa()
-        system.list_students()
+        system.list_students_sorted()
     elif c == 5:
         system.list_courses()
     elif c == 6:
