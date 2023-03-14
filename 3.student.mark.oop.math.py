@@ -58,6 +58,9 @@ class Management:
             dob = input('Student DoB: ')
             student = Students()
             student.set_student(ids, name, dob)
+            if validate_id(student.get_id(), self.__student_list):
+                print('The Student ID already existed')
+                break
             self.__student_list.append(student)
 
     def new_course(self):
@@ -76,7 +79,7 @@ class Management:
         course_id = self.get_course_id()
         student_id = self.get_student_id()
         print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
-        mark = take_a_number('Enter student mark: ')
+        mark = valid_mark()
         temp_credit = 0
         for course in self.__course_list:
             if course.get_id() == course_id:
@@ -183,7 +186,7 @@ class Courses:
         return self.__credit
 
 
-# General functions
+# General static functions
 def take_a_number(txt):
     while True:
         try:
@@ -202,6 +205,15 @@ def valid_input_id(txt):
             return id
         else:
             print('Invalid input, Try again!')
+
+
+def valid_mark():
+    while True:
+        mark = take_a_number('Enter student mark: ')
+        if mark < 0 or mark > 20:
+            print('Invalid input, Try again!')
+        else:
+            return mark
 
 
 def validate_id(id, list):
