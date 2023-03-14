@@ -19,8 +19,8 @@ class Management:
 
     def list_students(self):
         gpa_list = np.array([[0]])
-        for c in self.__student_list:
-            gpa_list = np.concatenate((gpa_list, [[c.get_gpa()]]), axis=0)
+        for student in self.__student_list:
+            gpa_list = np.concatenate((gpa_list, [[student.get_gpa()]]), axis=0)
         gpa_list = np.sort(gpa_list, axis=None)
         gpa_list = gpa_list[::-1]
 
@@ -37,13 +37,11 @@ class Management:
         for c in self.__course_list:
             print()
             print(f'Course ID: {c.get_id()}\n'
-                  f'Course name: {c.get_name()}\n')
+                  f'Course name: {c.get_name()}\n'
+                  f'Course credit: {c.get_credit()}')
 
     def list_marks(self):
-        course_id = input('Please enter the course_id that you want the mark list: ')
-        while not validate_id(course_id, self.__course_list):
-            print('Wrong course ID')
-            course_id = input('Enter the course ID: ')
+        course_id = self.get_course_id()
         print('Students marks for the course')
         for i in self.__course_list:
             if i.get_id() == course_id:
@@ -75,14 +73,8 @@ class Management:
             self.__course_list.append(course)
 
     def new_mark(self):
-        course_id = input('Enter the course ID: ')
-        student_id = input('Enter the student ID: ')
-        while not validate_id(course_id, self.__course_list):
-            print('Wrong course ID')
-            course_id = input('Enter the course ID: ')
-        while not validate_id(student_id, self.__student_list):
-            print('Wrong student ID')
-            student_id = input('Enter the student ID: ')
+        course_id = self.get_course_id()
+        student_id = self.get_student_id()
         print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
         mark = take_a_number('Enter student mark: ')
         temp_credit = 0
@@ -102,6 +94,13 @@ class Management:
             print('Wrong student ID')
             student_id = input('Enter the student ID: ')
         return student_id
+
+    def get_course_id(self):
+        course_id = input('Enter the course ID: ')
+        while not validate_id(course_id, self.__course_list):
+            print('Wrong course ID')
+            course_id = input('Enter the course ID: ')
+        return course_id
 
     def get_student_gpa(self, student_id):
         for student in self.__student_list:
@@ -241,13 +240,13 @@ def main():
     while running:
         try:
             b = int(input(' Press 1: Add Student Info'
-                          '\n Press 2: to Add Course Info'
+                          '\n Press 2: Add Course Info'
                           '\n Press 3: Add student mark'
                           '\n Press 4: To List Student'
                           '\n Press 5: To List Course'
                           '\n Press 6: To show student marks for a given course'
                           '\n Press 7: Calculate student gpa'
-                          '\n Press 0: exit'
+                          '\n Press 0: Exit'
                           '\n Pressed: '))
         except ValueError:
             print('Invalid input. Try again~')
