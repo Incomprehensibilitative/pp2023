@@ -61,7 +61,6 @@ class Management:
             print("===========================================")
             print()
 
-
     def list_marks(self):
         course_id = self.get_course_id()
         print("===========================================")
@@ -106,19 +105,20 @@ class Management:
         print("===========================================")
 
     def new_mark(self):
+        print("===========================================")
         course_id = self.get_course_id()
         student_id = self.get_student_id()
         print("===========================================")
         print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
-        print("===========================================")
         mark = valid_mark()
         temp_credit = 0
-        for student in self.__student_list:
-            if student.get_id() == student_id:
-                if student.get_mark() is not None:
-                    print("The mark is already filled")
-                    print("===========================================")
-                    return 0
+        for course in self.__course_list:
+            if course.get_id() == course_id:
+                mark_sheet = course.get_mark()
+                for student, grade in mark_sheet:
+                    if student == student_id:
+                        print(f'Student: {student} - had already been marked: {grade}')
+                        return
         for course in self.__course_list:
             if course.get_id() == course_id:
                 temp_credit = course.get_credit()
@@ -150,7 +150,7 @@ class Management:
                 print(f"Student ID: {student_id} - GPA: {student.get_gpa()}")
                 print("===========================================")
 
-    def calculate_gpa(self):
+    def calculate_gpa(self, error):
         # sum(marks * credits) / total_credits
         try:
             for student in self.__student_list:
@@ -160,9 +160,7 @@ class Management:
                 gpa = divisor/self.__number_of_credit
                 student.set_gpa(math.floor(gpa))
         except np.AxisError:
-            print("===========================================")
-            print('All student mark was not added -> cannot calculate GPA -> cannot list student in descending GPA')
-            print("===========================================")
+            print_error_txt(error)
 
 
 class Students:
@@ -232,6 +230,19 @@ class Courses:
 
 
 # General static functions
+def is_empty(student_list, course_list):
+    if len(student_list) == 0:
+        print("==========================================================")
+        print('The student list is empty, cannot carry out the operation')
+        print("==========================================================")
+        return True
+    elif len(course_list) == 0:
+        print("==========================================================")
+        print('The course list is empty, cannot carry out the operation')
+        print("==========================================================")
+        return True
+
+
 def take_a_number(txt):
     while True:
         print("===========================================")
@@ -271,6 +282,15 @@ def validate_id(id, list):
     return False
 
 
+def print_error_txt(txt):
+    if txt:
+        print("===============================================================================================")
+        print('All student mark was not added -> cannot calculate GPA -> cannot list student in descending GPA')
+        print("===============================================================================================")
+    else:
+        return
+
+
 def action(c, system):
     if c == 0:
         exit()
@@ -279,22 +299,26 @@ def action(c, system):
     elif c == 2:
         system.new_course()
     elif c == 3:
-        if len(system.get_course_list()) == 0:
-            print("====================================================")
-            print('The course list is empty, cannot set student mark')
-            print("====================================================")
+        if is_empty(system.get_student_list(), system.get_course_list()):
             return
-        system.new_mark()
+        else:
+            system.new_mark()
     elif c == 4:
-        system.calculate_gpa()
+        system.calculate_gpa(True)
         system.list_students_sorted()
     elif c == 5:
         system.list_courses()
     elif c == 6:
-        system.list_marks()
+        if is_empty(system.get_student_list(), system.get_course_list()):
+            return
+        else:
+            system.list_marks()
     elif c == 7:
-        system.calculate_gpa()
-        system.get_student_gpa(system.get_student_id())
+        if is_empty(system.get_student_list(), system.get_course_list()):
+            return
+        else:
+            system.calculate_gpa(False)
+            system.get_student_gpa(system.get_student_id())
     else:
         print('Invalid input. Try again~')
 
