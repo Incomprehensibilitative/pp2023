@@ -279,6 +279,11 @@ def action(c, system):
     elif c == 2:
         system.new_course()
     elif c == 3:
+        if len(system.get_course_list()) == 0:
+            print("====================================================")
+            print('The course list is empty, cannot set student mark')
+            print("====================================================")
+            return
         system.new_mark()
     elif c == 4:
         system.calculate_gpa()
