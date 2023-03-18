@@ -125,6 +125,9 @@ def write_to_file(file, todo, mode):
 
 def action(c, system):
     if c == 0:
+        system.compressing_files("students.txt", "students.dat")
+        system.compressing_files("courses.txt", "courses.dat")
+        system.compressing_files("marks.txt", "marks.dat")
         exit()
     elif c == 1:
         system.new_student()

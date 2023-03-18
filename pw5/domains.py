@@ -1,6 +1,8 @@
 import input as ip
 import numpy as np
 import output as op
+import zlib
+import os.path
 import math
 
 
@@ -87,6 +89,61 @@ class Management:
                 student.set_gpa(math.floor(gpa))
         except np.AxisError:
             op.print_calculate_mark_error(error)
+
+    @staticmethod
+    def new_text_files(mode):
+        if mode == 1:
+            ip.write_to_file("courses.txt", "Courses: ", "w")
+            ip.write_to_file("courses.txt", op.print_delimiter(1), "a")
+        if mode == 2:
+            ip.write_to_file("students.txt", "Students: ", "w")
+            ip.write_to_file("students.txt", op.print_delimiter(1), "a")
+        if mode == 3:
+            ip.write_to_file("marks.txt", "Marks: ", "w")
+            ip.write_to_file("marks.txt", op.print_delimiter(1), "a")
+
+    @staticmethod
+    def compressing_files(f1, f2):
+        filename_in = f1
+        filename_out = f2
+
+        with open(filename_in, mode="rb") as fin, open(filename_out, mode="wb") as fout:
+            data = fin.read()
+            compressed_data = zlib.compress(data, zlib.Z_BEST_COMPRESSION)
+            fout.write(compressed_data)
+
+    @staticmethod
+    def decompressing_files(f1, f2):
+        filename_in = f1
+        filename_out = f2
+
+        with open(filename_in, mode="rb") as fin, open(filename_out, mode="wb") as fout:
+            data = fin.read()
+            decompressed_data = zlib.decompress(data)
+            fout.write(decompressed_data)
+
+    def check_files(self):
+        path_students = './students.dat'
+        path_courses = './courses.dat'
+        path_marks = './marks.dat'
+
+        check_students = os.path.isfile(path_students)
+        check_courses = os.path.isfile(path_courses)
+        check_marks = os.path.isfile(path_marks)
+        if check_students:
+            self.decompressing_files("students.dat", "students.txt")
+        else:
+            self.new_text_files(2)
+
+        if check_courses:
+            self.decompressing_files("courses.dat", "courses.txt")
+        else:
+            self.new_text_files(1)
+
+        if check_marks:
+            self.decompressing_files("marks.dat", "marks.txt")
+        else:
+            self.new_text_files(3)
 
 
 class Students:
