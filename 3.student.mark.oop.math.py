@@ -94,7 +94,7 @@ class Management:
         for i in range(n):
             ids = valid_input_id('Course ID: ')
             name = input('Course name: ')
-            credit = take_a_number('Course credit: ')
+            credit = validate_credit()
             self.__number_of_credit += credit
             course = Courses()
             course.set_course(ids, name, credit)
@@ -289,6 +289,16 @@ def print_error_txt(txt):
         print("===============================================================================================")
     else:
         return
+
+
+def validate_credit():
+    while True:
+        credit = take_a_number("Course credit: ")
+        if credit <= 0:
+            print('Invalid input, the credit has to be > 0. Try again!')
+        else:
+            print("===========================================")
+            return credit
 
 
 def action(c, system):
