@@ -1,5 +1,5 @@
+import domains.Management as dm
 import input as ip
-import domains as dm
 
 
 def main():
