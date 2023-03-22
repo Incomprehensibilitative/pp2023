@@ -1,6 +1,8 @@
-import input as ip
+import pp2023.pw5.input as ip
 import numpy as np
-import output as op
+import pp2023.pw5.output as op
+from pp2023.pw5.domains import Students as st
+from pp2023.pw5.domains import Courses as co
 import zlib
 import os.path
 import math
@@ -37,7 +39,7 @@ class Management:
         self.__number_of_student += n
         for i in range(n):
             ids, name, dob = ip.get_new_student()
-            student = Students()
+            student = st.Students()
             student.set_student(ids, name, dob)
             if ip.validate_id(student.get_id(), self.__student_list):
                 op.print_already_existed_id("Student ID", student.get_id())
@@ -51,7 +53,7 @@ class Management:
         for i in range(n):
             ids, name, credit = ip.get_new_course()
             self.__number_of_credit += credit
-            course = Courses()
+            course = co.Courses()
             course.set_course(ids, name, credit)
             if ip.validate_id(course.get_id(), self.__course_list):
                 op.print_already_existed_id("Course ID", course.get_id())
@@ -69,7 +71,7 @@ class Management:
                 for student, grade in mark_sheet:
                     if student == student_id:
                         op.print_already_marked(student, grade)
-                        return
+                        return 0
                 temp_credit = course.get_credit()
                 temp = [student_id, mark]
                 course.set_mark(temp)
@@ -83,6 +85,7 @@ class Management:
         try:
             for student in self.__student_list:
                 student_marks = np.array(student.get_mark())
+                print(student_marks)
                 product_of_mark_credit = np.prod(student_marks, axis=1)
                 divisor = np.sum(product_of_mark_credit)
                 gpa = divisor/self.__number_of_credit
@@ -90,17 +93,35 @@ class Management:
         except np.AxisError:
             op.print_calculate_mark_error(error)
 
-    @staticmethod
-    def new_text_files(mode):
-        if mode == 1:
-            ip.write_to_file("courses.txt", "Courses: ", "w")
-            ip.write_to_file("courses.txt", op.print_delimiter(1), "a")
-        if mode == 2:
-            ip.write_to_file("students.txt", "Students: ", "w")
-            ip.write_to_file("students.txt", op.print_delimiter(1), "a")
-        if mode == 3:
-            ip.write_to_file("marks.txt", "Marks: ", "w")
-            ip.write_to_file("marks.txt", op.print_delimiter(1), "a")
+    def restore(self):
+        # restore student objects
+        student_file = open("students.txt", "r")
+        student_objects = student_file.readline()
+        while student_objects:
+            new_student = st.Students()
+            student_attr = student_objects.strip().split(", ")
+            id = student_attr[0]
+            name = student_attr[1]
+            dob = student_attr[2]
+            new_student.set_student(id, name, dob)
+            self.__student_list.append(new_student)
+            student_objects = student_file.readline()
+        student_file.close()
+
+        # restore course objects
+        course_file = open("courses.txt", "r")
+        course_objects = course_file.readline()
+        while course_objects:
+            new_course = co.Courses()
+            course_attr = course_objects.strip().split(", ")
+            id = course_attr[0]
+            name = course_attr[1]
+            credit = int(course_attr[2])
+            self.__number_of_credit += credit
+            new_course.set_course(id, name, credit)
+            self.__course_list.append(new_course)
+            course_objects = course_file.readline()
+        course_file.close()
 
     @staticmethod
     def compressing_files(f1, f2):
@@ -133,80 +154,17 @@ class Management:
         if check_students:
             self.decompressing_files("students.dat", "students.txt")
         else:
-            self.new_text_files(2)
+            with open('students.txt', 'w') as f:
+                f.close()
 
         if check_courses:
             self.decompressing_files("courses.dat", "courses.txt")
         else:
-            self.new_text_files(1)
+            with open('courses.txt', 'w') as f:
+                f.close()
 
         if check_marks:
             self.decompressing_files("marks.dat", "marks.txt")
         else:
-            self.new_text_files(3)
-
-
-class Students:
-    def __init__(self):
-        self.__id = 0
-        self.__name = ''
-        self.__dob = ''
-        self.__marks = None
-        self.__gpa = None
-
-    def set_student(self, id, name, dob):
-        self.__id = id
-        self.__name = name
-        self.__dob = dob
-
-    def set_gpa(self, gpa):
-        self.__gpa = gpa
-
-    def set_mark(self, array):
-        if self.__marks is None:
-            self.__marks = np.array(array)
-        else:
-            self.__marks = np.concatenate((self.__marks, array), axis=0)
-
-    def get_mark(self):
-        return self.__marks
-
-    def get_id(self):
-        return self.__id
-
-    def get_name(self):
-        return self.__name
-
-    def get_dob(self):
-        return self.__dob
-
-    def get_gpa(self):
-        return self.__gpa
-
-
-class Courses:
-    def __init__(self):
-        self.__id = 0
-        self.__name = ''
-        self.__marks = []
-        self.__credit = 0
-
-    def set_course(self, id, name, credit):
-        self.__id = id
-        self.__name = name
-        self.__credit = credit
-
-    def set_mark(self, temp):
-        self.__marks.append(temp)
-
-    def get_id(self):
-        return self.__id
-
-    def get_name(self):
-        return self.__name
-
-    def get_mark(self):
-        return self.__marks
-
-    def get_credit(self):
-        return self.__credit
+            with open('marks.txt', 'w') as f:
+                f.close()

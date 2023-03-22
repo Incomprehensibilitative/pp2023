@@ -2,22 +2,20 @@ import output as op
 
 
 def get_new_course():
-    ids = valid_input_id('Course ID: ')
-    name = input('Course name: ')
+    ids = valid_input('Course ID: ')
+    name = valid_input('Course name: ')
     credit = validate_credit()
-    txt = f"Course ID: {ids}\nCourse name: {name}\nCourse credit: {credit}\n"
+    txt = f"{ids}, {name}, {credit}"
     write_to_file("courses.txt", txt, "a")
-    write_to_file("courses.txt", op.print_delimiter(1), "a")
     return ids, name, credit
 
 
 def get_new_student():
-    ids = valid_input_id('Student ID: ')
-    name = input('Student name: ')
-    dob = input('Student DoB: ')
-    txt = f"Student ID: {ids}\nStudent name: {name}\nStudent credit: {dob}\n"
+    ids = valid_input('Student ID: ')
+    name = valid_input('Student name: ')
+    dob = valid_input('Student DoB: ')
+    txt = f"{ids}, {name}, {dob}"
     write_to_file("students.txt", txt, "a")
-    write_to_file("students.txt", op.print_delimiter(1), "a")
     return ids, name, dob
 
 
@@ -28,9 +26,8 @@ def get_new_mark(course_list, student_list):
     op.print_delimiter(0)
     print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
     mark = valid_mark()
-    txt = f"Course ID: {course_id}\nStudent ID: {student_id}\nStudent mark: {mark}\n"
+    txt = f"{course_id}, {student_id}, {mark}"
     write_to_file("marks.txt", txt, "a")
-    write_to_file("marks.txt", op.print_delimiter(1), "a")
     return course_id, student_id, mark
 
 
@@ -46,14 +43,14 @@ def take_a_number(txt):
             return n
 
 
-def valid_input_id(txt):
+def valid_input(txt):
     while True:
-        op.print_delimiter(0)
         id = input(txt)
         if id.strip() != '':
             return id
         else:
             print('Invalid input, Try again!')
+            op.print_delimiter(0)
 
 
 def valid_mark():
@@ -108,7 +105,7 @@ def get_student_gpa(student_id, student_list):
             op.print_delimiter(0)
 
 
-def is_empty(student_list, course_list):
+def is_empty_list(student_list, course_list):
     if len(student_list) == 0:
         op.print_empty_list("course list")
         return True
@@ -134,7 +131,7 @@ def action(c, system):
     elif c == 2:
         system.new_course()
     elif c == 3:
-        if is_empty(system.get_student_list(), system.get_course_list()):
+        if is_empty_list(system.get_student_list(), system.get_course_list()):
             return
         else:
             system.new_mark()
@@ -144,12 +141,12 @@ def action(c, system):
     elif c == 5:
         op.list_courses(system.get_course_list())
     elif c == 6:
-        if is_empty(system.get_student_list(), system.get_course_list()):
+        if is_empty_list(system.get_student_list(), system.get_course_list()):
             return
         else:
             op.list_marks(system.get_course_list())
     elif c == 7:
-        if is_empty(system.get_student_list(), system.get_course_list()):
+        if is_empty_list(system.get_student_list(), system.get_course_list()):
             return
         else:
             system.calculate_gpa(False)

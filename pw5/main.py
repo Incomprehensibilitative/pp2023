@@ -1,10 +1,11 @@
 import input as ip
-import domains as dm
+from domains import Management
 
 
 def main():
-    system = dm.Management()
+    system = Management.Management()
     system.check_files()
+    system.restore()
     ip.print_menu(system)
 
 
