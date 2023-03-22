@@ -15,9 +15,9 @@ class Management:
         self.__number_of_credit = 0
         self.__number_of_student = 0
         self.__number_of_course = 0
-        self.__course_list = None
-        self.__student_list = None
-        self.__mark_list = None
+        self.__course_list = []
+        self.__student_list = []
+        self.__mark_list = []
 
     def get_course_list(self):
         return self.__course_list
@@ -109,7 +109,7 @@ class Management:
         if self.__course_list is not None:
             for course in self.__course_list:
                 self.__number_of_credit += course.get_credit()
-        # Ces codes prendra une éternité à exécuter , mais je ne sais pas d'autres moyens, je suis perdu
+        # Ces codes prendra une éternité à exécuter ,mais je ne sais pas d'autres moyens, je suis perdu
         if self.__mark_list is not None:
             for mark_sheet in self.__mark_list:
                 mark_dict = mark_sheet.get_mark_students()
