@@ -1,8 +1,8 @@
-import pp2023.pw6.input as ip
-import pp2023.pw6.output as op
-from pp2023.pw6.domains import Students as st
-from pp2023.pw6.domains import Courses as co
-from pp2023.pw6.domains import Marks as ma
+import input as ip
+import output as op
+from domains import Students as st
+from domains import Courses as co
+from domains import Marks as ma
 import numpy as np
 import bz2
 import os.path
@@ -163,22 +163,31 @@ class Management:
         check_courses = os.path.isfile(path_courses)
         check_marks = os.path.isfile(path_marks)
         if check_students:
-            self.decompressing_files("students.dat")
-            self.__student_list = self.de_pickling("students")
+            try:
+                self.decompressing_files("students.dat")
+                self.__student_list = self.de_pickling("students")
+            except EOFError:
+                pass
         else:
             self.reset_file("students.dat")
             self.reset_file("students")
 
         if check_courses:
-            self.decompressing_files("courses.dat")
-            self.__course_list = self.de_pickling("courses")
+            try:
+                self.decompressing_files("courses.dat")
+                self.__course_list = self.de_pickling("courses")
+            except EOFError:
+                pass
         else:
             self.reset_file("courses.dat")
             self.reset_file("courses")
 
         if check_marks:
-            self.decompressing_files("marks.dat")
-            self.__mark_list = self.de_pickling("marks")
+            try:
+                self.decompressing_files("marks.dat")
+                self.__mark_list = self.de_pickling("marks")
+            except EOFError:
+                pass
         else:
             self.reset_file("marks.dat")
             self.reset_file("marks")
