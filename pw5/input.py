@@ -26,8 +26,6 @@ def get_new_mark(course_list, student_list):
     op.print_delimiter(0)
     print(f'Enter the Mark for Student_id: {student_id} in Course_id: {course_id}')
     mark = valid_mark()
-    txt = f"{course_id}, {student_id}, {mark}"
-    write_to_file("marks.txt", txt, "a")
     return course_id, student_id, mark
 
 
@@ -107,10 +105,10 @@ def get_student_gpa(student_id, student_list):
 
 def is_empty_list(student_list, course_list):
     if len(student_list) == 0:
-        op.print_empty_list("course list")
+        op.print_empty_list("student list")
         return True
     elif len(course_list) == 0:
-        op.print_empty_list("student list")
+        op.print_empty_list("course list")
         return True
 
 

@@ -1,5 +1,5 @@
 import input as ip
-from domains import Management
+import Management
 
 
 def main():

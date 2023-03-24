@@ -1,8 +1,8 @@
-import pp2023.pw5.input as ip
+import input as ip
 import numpy as np
-import pp2023.pw5.output as op
-from pp2023.pw5.domains import Students as st
-from pp2023.pw5.domains import Courses as co
+import output as op
+from domains import Students as st
+from domains import Courses as co
 import zlib
 import os.path
 import math
@@ -15,6 +15,7 @@ class Management:
         self.__number_of_course = 0
         self.__course_list = []
         self.__student_list = []
+        self.__mark_list = []
 
     def get_course_list(self):
         return self.__course_list
@@ -74,11 +75,14 @@ class Management:
                         return 0
                 temp_credit = course.get_credit()
                 temp = [student_id, mark]
+                txt = f"{course_id}, {student_id}, {mark}, {temp_credit}"
+                ip.write_to_file("marks.txt", txt, "a")
                 course.set_mark(temp)
         for student in self.__student_list:
             if student.get_id() == student_id:
                 temp = np.array([[mark, temp_credit]])
                 student.set_mark(temp)
+
 
     def calculate_gpa(self, error):
         # sum(marks * credits) / total_credits
@@ -122,6 +126,20 @@ class Management:
             self.__course_list.append(new_course)
             course_objects = course_file.readline()
         course_file.close()
+
+        mark_file = open("marks.txt", "r")
+        mark_objects = mark_file.readline()
+        while mark_objects:
+            mark_attr = mark_objects.strip().split(", ")
+            mark = int(mark_attr[2])
+            credit = int(mark_attr[3])
+            for student in self.__student_list:
+                if student.get_id() == mark_attr[1]:
+                    temp = np.array([[mark, credit]])
+                    student.set_mark(temp)
+            mark_objects = mark_file.readline()
+        mark_file.close()
+
 
     @staticmethod
     def compressing_files(f1, f2):
